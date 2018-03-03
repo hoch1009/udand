@@ -14,13 +14,12 @@ washington = 'washington.csv'
 month = 0
 day = 0
 
+
 def get_city():
     '''Asks the user for a city and returns the filename for that city's bike share data.
 
-    Args:
-        none.
-    Returns:
-        (str) Filename for a city's bikeshare data.
+    Args: none.
+    Returns: (str) Filename for a city's bikeshare data.
     '''
     city = str(input('\nHello! Let\'s explore some US bikeshare data!\n''Would you like to see data for Chicago, New York, or Washington?\n '))
     if city.replace(" ", "").lower() == "newyork":
@@ -31,15 +30,15 @@ def get_city():
         city = washington
     return city
 
+
 def get_time_period():
     '''Asks the user for a time period and returns the specified filter.
 
-    Args:
-        none.
-    Returns:
-        (str) time_period for filtering
+    Args: none.
+    Returns: (str) time_period for filtering
     '''
-    time_period = input('\nWould you like to filter the data by month, day, or not at all? Type "none" for no time filter.\n ')
+    time_period = input(
+        '\nWould you like to filter the data by month, day, or not at all? Type "none" for no time filter.\n ')
     if time_period.lower() == 'month':
         time_period = 'month'
     elif time_period.lower() == 'day':
@@ -51,6 +50,7 @@ def get_time_period():
         get_time_period()
     return str(time_period)
 
+
 def get_month():
     '''Asks the user for a month and returns the specified month.
 
@@ -60,13 +60,16 @@ def get_month():
         (str) month
     '''
     global month
-    available_months = {"january": 1, "february": 2, "march": 3, "april": 4, "may": 5, "june": 6}
-    month = input('\nWhich month? January, February, March, April, May, or June?\n ')
+    available_months = {"january": 1, "february": 2,
+                        "march": 3, "april": 4, "may": 5, "june": 6}
+    month = input(
+        '\nWhich month? January, February, March, April, May, or June?\n ')
     if month.lower() in available_months.keys():
         month = available_months[month.lower()]
     else:
         get_month()
     return month
+
 
 def get_day(month):
     '''Asks the user for a day and returns the specified day.
@@ -85,6 +88,7 @@ def get_day(month):
         day = int(day)
     return day
 
+
 def popular_month(city_file, time_period):
     '''Determines the most popular month.
 
@@ -93,7 +97,8 @@ def popular_month(city_file, time_period):
     Returns:
         (str) most popular month
     '''
-    starts_per_month = {"January": 0, "February": 0, "March": 0, "April": 0, "May": 0, "June": 0}
+    starts_per_month = {"January": 0, "February": 0,
+                        "March": 0, "April": 0, "May": 0, "June": 0}
     for row in city_file:
         if dt.datetime.strptime(row['Start Time'], "%Y-%m-%d %H:%M:%S").month == 1:
             starts_per_month['January'] += 1
@@ -110,7 +115,8 @@ def popular_month(city_file, time_period):
         else:
             print('An error occurred.')
 
-    print(' The most popular month for start time is: ' + str(max(starts_per_month, key=starts_per_month.get)) + " with " + str(starts_per_month[max(starts_per_month, key=starts_per_month.get)]) + ' starts.' )
+    print(' The most popular month for start time is: ' + str(max(starts_per_month, key=starts_per_month.get)
+                                                              ) + " with " + str(starts_per_month[max(starts_per_month, key=starts_per_month.get)]) + ' starts.')
 
 
 def popular_day(city_file, time_period):
@@ -121,7 +127,8 @@ def popular_day(city_file, time_period):
     Returns:
         (str) most popular day of week
     '''
-    starts_per_day = {"Monday": 0, "Tuesday": 0, "Wednesday": 0, "Thursday": 0, "Friday": 0, "Saturday": 0, "Sunday": 0}
+    starts_per_day = {"Monday": 0, "Tuesday": 0, "Wednesday": 0,
+                      "Thursday": 0, "Friday": 0, "Saturday": 0, "Sunday": 0}
     if time_period == 'none':
         for row in city_file:
             if dt.datetime.strptime(row['Start Time'], "%Y-%m-%d %H:%M:%S").weekday() == 0:
@@ -160,7 +167,8 @@ def popular_day(city_file, time_period):
                 else:
                     print('An error occurred.')
 
-    print(' The most popular day for start time is: ' + str(max(starts_per_day, key=starts_per_day.get)) + " with " + str(starts_per_day[max(starts_per_day, key=starts_per_day.get)]) + ' starts.' )
+    print(' The most popular day for start time is: ' + str(max(starts_per_day, key=starts_per_day.get)
+                                                            ) + " with " + str(starts_per_day[max(starts_per_day, key=starts_per_day.get)]) + ' starts.')
 
 
 def popular_hour(city_file, time_period):
@@ -175,24 +183,31 @@ def popular_hour(city_file, time_period):
     if time_period == 'none':
         for row in city_file:
             if dt.datetime.strptime(row['Start Time'], "%Y-%m-%d %H:%M:%S").hour not in popular_hours:
-                popular_hours[dt.datetime.strptime(row['Start Time'], "%Y-%m-%d %H:%M:%S").hour] = 1
+                popular_hours[dt.datetime.strptime(
+                    row['Start Time'], "%Y-%m-%d %H:%M:%S").hour] = 1
             else:
-                popular_hours[dt.datetime.strptime(row['Start Time'], "%Y-%m-%d %H:%M:%S").hour] += 1
+                popular_hours[dt.datetime.strptime(
+                    row['Start Time'], "%Y-%m-%d %H:%M:%S").hour] += 1
     elif time_period == 'month':
         for row in city_file:
             if dt.datetime.strptime(row['Start Time'], "%Y-%m-%d %H:%M:%S").month == month:
                 if dt.datetime.strptime(row['Start Time'], "%Y-%m-%d %H:%M:%S").hour not in popular_hours:
-                    popular_hours[dt.datetime.strptime(row['Start Time'], "%Y-%m-%d %H:%M:%S").hour] = 1
+                    popular_hours[dt.datetime.strptime(
+                        row['Start Time'], "%Y-%m-%d %H:%M:%S").hour] = 1
                 else:
-                    popular_hours[dt.datetime.strptime(row['Start Time'], "%Y-%m-%d %H:%M:%S").hour] += 1
+                    popular_hours[dt.datetime.strptime(
+                        row['Start Time'], "%Y-%m-%d %H:%M:%S").hour] += 1
     elif time_period == 'day':
         for row in city_file:
             if dt.datetime.strptime(row['Start Time'], "%Y-%m-%d %H:%M:%S").month == month and dt.datetime.strptime(row['Start Time'], "%Y-%m-%d %H:%M:%S").day == day:
                 if dt.datetime.strptime(row['Start Time'], "%Y-%m-%d %H:%M:%S").hour not in popular_hours:
-                    popular_hours[dt.datetime.strptime(row['Start Time'], "%Y-%m-%d %H:%M:%S").hour] = 1
+                    popular_hours[dt.datetime.strptime(
+                        row['Start Time'], "%Y-%m-%d %H:%M:%S").hour] = 1
                 else:
-                    popular_hours[dt.datetime.strptime(row['Start Time'], "%Y-%m-%d %H:%M:%S").hour] += 1
-    print(' The most popular hour for start time is: ' + str(max(popular_hours, key=popular_hours.get)) + " with " + str(popular_hours[max(popular_hours, key=popular_hours.get)]) + ' starts.' )
+                    popular_hours[dt.datetime.strptime(
+                        row['Start Time'], "%Y-%m-%d %H:%M:%S").hour] += 1
+    print(' The most popular hour for start time is: ' + str(max(popular_hours, key=popular_hours.get)
+                                                             ) + " with " + str(popular_hours[max(popular_hours, key=popular_hours.get)]) + ' starts.')
 
 
 def trip_duration(city_file, time_period):
@@ -221,8 +236,10 @@ def trip_duration(city_file, time_period):
                 number_of_trips += 1
     else:
         print('An error occured')
-    print(' The total trip duration is: ' + str(total_trip_duration) + ' seconds (= ' + str(total_trip_duration/60) + ' minutes)')
-    print(' The average trip duration is: ' + str(total_trip_duration/number_of_trips) + ' seconds (= ' + str((total_trip_duration/number_of_trips)/60) + ' minutes)')
+    print(' The total trip duration is: ' + str(total_trip_duration) +
+          ' seconds (= ' + str(total_trip_duration / 60) + ' minutes)')
+    print(' The average trip duration is: ' + str(total_trip_duration / number_of_trips) +
+          ' seconds (= ' + str((total_trip_duration / number_of_trips) / 60) + ' minutes)')
 
 
 def popular_stations(city_file, time_period):
@@ -285,7 +302,8 @@ def popular_trip(city_file, time_period):
     pop_trips = dict()
     if time_period == 'none':
         for row in city_file:
-            trip = str(row['Start Station']) + ' to: ' + str(row['End Station'])
+            trip = str(row['Start Station']) + \
+                ' to: ' + str(row['End Station'])
             if trip not in pop_trips:
                 pop_trips[trip] = 1
             else:
@@ -293,7 +311,8 @@ def popular_trip(city_file, time_period):
     elif time_period == 'month':
         for row in city_file:
             if dt.datetime.strptime(row['Start Time'], "%Y-%m-%d %H:%M:%S").month == month:
-                trip = str(row['Start Station']) + ' to: ' + str(row['End Station'])
+                trip = str(row['Start Station']) + \
+                    ' to: ' + str(row['End Station'])
                 if trip not in pop_trips:
                     pop_trips[trip] = 1
                 else:
@@ -301,12 +320,14 @@ def popular_trip(city_file, time_period):
     elif time_period == 'day':
         for row in city_file:
             if dt.datetime.strptime(row['Start Time'], "%Y-%m-%d %H:%M:%S").month == month and dt.datetime.strptime(row['Start Time'], "%Y-%m-%d %H:%M:%S").day == day:
-                trip = str(row['Start Station']) + ' to: ' + str(row['End Station'])
+                trip = str(row['Start Station']) + \
+                    ' to: ' + str(row['End Station'])
                 if trip not in pop_trips:
                     pop_trips[trip] = 1
                 else:
                     pop_trips[trip] += 1
-    print(' Popular trip from:\t' + str(max(pop_trips, key=pop_trips.get)) + " with " + str(pop_trips[max(pop_trips, key=pop_trips.get)]) + " trips." )
+    print(' Popular trip from:\t' + str(max(pop_trips, key=pop_trips.get)) +
+          " with " + str(pop_trips[max(pop_trips, key=pop_trips.get)]) + " trips.")
 
 
 def users(city_file, time_period):
@@ -339,7 +360,8 @@ def users(city_file, time_period):
                 else:
                     user_types[row['User Type']] += 1
     for k, v in user_types.items():
-                print(' ' + str(k) + ': ' + str(v))
+        print(' ' + str(k) + ': ' + str(v))
+
 
 def gender(city_file, time_period):
     '''Determines the user type distribution.
@@ -375,6 +397,7 @@ def gender(city_file, time_period):
             print(' N/A: ' + str(v))
         else:
             print(' ' + str(k) + ': ' + str(v))
+
 
 def birth_years(city_file, time_period):
     '''Determines the oldest, most recent and most popular birth year
@@ -420,7 +443,8 @@ def birth_years(city_file, time_period):
 
     print(' Earliest birth year:\t\t ' + str(sorted(birth_years)[0]))
     print(' Most recent birth year:\t ' + str(sorted(birth_years)[-1]))
-    print(' Most popular birth year:\t ' + str(max(birth_years, key=birth_years.get)))
+    print(' Most popular birth year:\t ' +
+          str(max(birth_years, key=birth_years.get)))
 
 
 def display_data():
@@ -433,7 +457,8 @@ def display_data():
     Returns:
         TODO: fill out return type and description (see get_city for an example)
     '''
-    display = input('\nWould you like to view individual trip data? Type \'yes\' or \'no\'.\n ')
+    display = input(
+        '\nWould you like to view individual trip data? Type \'yes\' or \'no\'.\n ')
     # TODO: handle raw input and complete function
 
 
@@ -446,7 +471,8 @@ def statistics():
     Returns:
         none.
     '''
-    # Reseting the global variables in case the user has restarted the statistics
+    # Reseting the global variables in case the user has restarted the
+    # statistics
     global month
     month = 0
     global day
@@ -457,7 +483,8 @@ def statistics():
 
     # Turn the csv for the city into a list of dictionaries (city_file)
     with open(city) as csv_file:
-        city_file = [{k: v for k, v in row.items()} for row in csv.DictReader(csv_file, skipinitialspace=True)]
+        city_file = [{k: v for k, v in row.items()}
+                     for row in csv.DictReader(csv_file, skipinitialspace=True)]
 
     # Filter by time period (month, day, none)
     time_period = get_time_period()
@@ -497,7 +524,6 @@ def statistics():
     # What is the most popular hour of day for start time?
     popular_hour(city_file, time_period)
 
-
     print("That took %s seconds." % (time.time() - start_time))
     print("Calculating the next statistic...")
     start_time = time.time()
@@ -526,7 +552,6 @@ def statistics():
     start_time = time.time()
     users(city_file, time_period)
     print("That took %s seconds." % (time.time() - start_time))
-
 
     if city == 'chicago' or 'new_york_city':
         # What are the counts of gender?
