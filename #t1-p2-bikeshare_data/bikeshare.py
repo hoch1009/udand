@@ -28,6 +28,9 @@ def get_city():
         city = chicago
     elif city.replace(" ", "").lower() == "washington":
         city = washington
+    else:
+        print('Sorry, please try again.')
+        return get_city()
     return city
 
 
@@ -47,7 +50,7 @@ def get_time_period():
         time_period = 'none'
     else:
         print('Sorry, please try again.')
-        get_time_period()
+        return get_time_period()
     return str(time_period)
 
 
@@ -208,17 +211,17 @@ def trip_duration(city_file, time_period):
     number_of_trips = 0
     if time_period == 'none':
         for row in city_file:
-            total_trip_duration += int(row['Trip Duration'])
+            total_trip_duration += float(row['Trip Duration'])
             number_of_trips += 1
     elif time_period == 'month':
         for row in city_file:
             if dt.datetime.strptime(row['Start Time'], "%Y-%m-%d %H:%M:%S").month == month:
-                total_trip_duration += int(row['Trip Duration'])
+                total_trip_duration += float(row['Trip Duration'])
                 number_of_trips += 1
     elif time_period == 'day':
         for row in city_file:
             if dt.datetime.strptime(row['Start Time'], "%Y-%m-%d %H:%M:%S").month == month and dt.datetime.strptime(row['Start Time'], "%Y-%m-%d %H:%M:%S").day == day:
-                total_trip_duration += int(row['Trip Duration'])
+                total_trip_duration += float(row['Trip Duration'])
                 number_of_trips += 1
     else:
         print('An error occured')
@@ -390,10 +393,10 @@ def birth_years(city_file, time_period):
                 pass
             else:
                 birthyear = row['Birth Year'].replace('.0', "")
-            if int(birthyear) not in birth_years:
-                birth_years[int(birthyear)] = 1
-            else:
-                birth_years[int(birthyear)] += 1
+                if int(birthyear) not in birth_years:
+                    birth_years[int(birthyear)] = 1
+                else:
+                    birth_years[int(birthyear)] += 1
     elif time_period == 'month':
         for row in city_file:
             if dt.datetime.strptime(row['Start Time'], "%Y-%m-%d %H:%M:%S").month == month:
@@ -401,10 +404,10 @@ def birth_years(city_file, time_period):
                     pass
                 else:
                     birthyear = row['Birth Year'].replace('.0', "")
-                if int(birthyear) not in birth_years:
-                    birth_years[int(birthyear)] = 1
-                else:
-                    birth_years[int(birthyear)] += 1
+                    if int(birthyear) not in birth_years:
+                        birth_years[int(birthyear)] = 1
+                    else:
+                        birth_years[int(birthyear)] += 1
     elif time_period == 'day':
         for row in city_file:
             if dt.datetime.strptime(row['Start Time'], "%Y-%m-%d %H:%M:%S").month == month and dt.datetime.strptime(row['Start Time'], "%Y-%m-%d %H:%M:%S").day == day:
@@ -412,10 +415,10 @@ def birth_years(city_file, time_period):
                     pass
                 else:
                     birthyear = row['Birth Year'].replace('.0', "")
-                if int(birthyear) not in birth_years:
-                    birth_years[int(birthyear)] = 1
-                else:
-                    birth_years[int(birthyear)] += 1
+                    if int(birthyear) not in birth_years:
+                        birth_years[int(birthyear)] = 1
+                    else:
+                        birth_years[int(birthyear)] += 1
 
     print(' Earliest birth year:\t\t ' + str(sorted(birth_years)[0]))
     print(' Most recent birth year:\t ' + str(sorted(birth_years)[-1]))
@@ -547,7 +550,7 @@ def statistics():
     users(city_file, time_period)
     print("That took %s seconds." % (time.time() - start_time))
 
-    if city == 'chicago' or 'new_york_city':
+    if city == chicago or city == new_york_city:
         # What are the counts of gender?
         print("Calculating the next statistic...")
         start_time = time.time()
