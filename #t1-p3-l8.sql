@@ -1,4 +1,5 @@
-# CHEAT SHEET
+# Term 1 - Part 3 - Lesson 8
+# notes
 
 # join 1 tables
 # all web events associated with account name 'Walmart'
