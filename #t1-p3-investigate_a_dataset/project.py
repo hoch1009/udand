@@ -7,7 +7,6 @@ import pandas as pd
 #import os
 #print(os.getcwd())
 
-
 df1 = pd.read_excel('#t1-p3-investigate_a_dataset/ncis-and-census-data/gun_data.xlsx')
 
 # skip last 20 lines because they contain explanations
@@ -21,14 +20,24 @@ df2 = df2.transpose()
 
 # replacing commas and turning strings to numbers
 df2['Veterans, 2011-2015'] = df2['Veterans, 2011-2015'].str.replace(",", "")
+# convert to numeric type
 df2['Veterans, 2011-2015'] = pd.to_numeric(df2['Veterans, 2011-2015'], errors='coerce')
 
 # get the 5 states with the largest and smallest amount of veterans
 print(df2['Veterans, 2011-2015'].nlargest(5))
 print(df2['Veterans, 2011-2015'].nsmallest(5))
 
-# TODO: data wrangling
-df2['Foreign born persons, percent, 2011-2015']
+# remove '%' and divide by 100
+def clean_percentage(x):
+    if type(x) == str:
+        x = x.replace('%', '')
+        x = float(x)/100
+    return x
+
+# applying the function
+df2['Foreign born persons, percent, 2011-2015'].apply(clean_percentage)
+# convert to numeric type
+df2['Foreign born persons, percent, 2011-2015'] = pd.to_numeric(df2['Foreign born persons, percent, 2011-2015'], errors='coerce')
 
 # TODO: get the 5 states with the largest and smallest percentage of forein born persons
 print(df2['Foreign born persons, percent, 2011-2015'].nlargest(5))
