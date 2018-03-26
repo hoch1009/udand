@@ -2,6 +2,7 @@
 
 import numpy as np
 import pandas as pd
+import re
 #import matplotlib.pylot as plt
 
 #import os
@@ -29,17 +30,19 @@ print(df2['Veterans, 2011-2015'].nsmallest(5))
 
 # remove '%' and divide by 100
 def clean_percentage(x):
-    if type(x) == str:
+    if '%' in x:
         x = x.replace('%', '')
         x = float(x)/100
-    return x
+        return x
+    else:
+        return float(x)
 
 # applying the function
-df2['Foreign born persons, percent, 2011-2015'].apply(clean_percentage)
+df2['Foreign born persons, percent, 2011-2015'] = df2['Foreign born persons, percent, 2011-2015'].apply(clean_percentage)
+
 # convert to numeric type
 df2['Foreign born persons, percent, 2011-2015'] = pd.to_numeric(df2['Foreign born persons, percent, 2011-2015'], errors='coerce')
-
-# TODO: get the 5 states with the largest and smallest percentage of forein born persons
+# get the 5 states with the largest and smallest percentage of forein born persons
 print(df2['Foreign born persons, percent, 2011-2015'].nlargest(5))
 print(df2['Foreign born persons, percent, 2011-2015'].nsmallest(5))
 
