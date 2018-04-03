@@ -12,16 +12,22 @@
 ## Introduction
 
 The following analysis is based on data from the FBI's National Instant Criminal Background Check System which can be found on [GitHub](https://github.com/BuzzFeedNews/nics-firearm-background-checks/blob/master/README.md). The data set consists of two files:
-- gun_data.xlsx containing the actual gun data per state per month
-- U.S. Census Data.csv containing some variables on state level which can be used to investigate if certain aspects have an effect on the number of guns per state
+- **gun_data.xlsx**: containing the actual gun data per state per month
+- **U.S. Census Data.csv**: containing some variables on state level which can be used to investigate if certain aspects have an effect on the number of guns per state
 
 ```python
-# Use this cell to set up import statements for all of the packages that you
-#   plan to use.
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+%matplotlib inline
+```
 
-# Remember to include a 'magic word' so that your visualizations are plotted
-#   inline with the notebook. See this page for more:
-#   http://ipython.readthedocs.io/en/stable/interactive/magics.html
+```python
+# Create a dataframe based on the gun_data.xlsx
+df_gd = pd.read_excel('gun_data.xlsx')
+
+# Create a dataframe based on the raw census data
+df_c_raw = pd.read_csv('#t1-p3-investigate_a_dataset/ncis-and-census-data/U.S. Census Data.csv')
 
 ```
 
@@ -32,25 +38,28 @@ The following analysis is based on data from the FBI's National Instant Criminal
 
 ### General Properties of the file: gun_data.xlsx
 
+Getting a general overview over the data:
 
 ```python
-# Load your data and print out a few lines. Perform operations to inspect data
-#   types and look for instances of missing or possibly errant data.
-
+df_gd.info()
 ```
 
+Observations:
+- The column 'month' has an incorrect datatype (_object_ instead of _datetime64[ns]_)
 
 ### General Properties of the file: U.S. Census Data.csv
 
+Getting a general overview over the data:
 
 ```python
-# Load your data and print out a few lines. Perform operations to inspect data
-#   types and look for instances of missing or possibly errant data.
-
+df_c_raw.info()
 ```
-> **Tip**: You should _not_ perform too many operations in each cell. Create cells freely to explore your data. One option that you can take with this project is to do a lot of explorations in an initial notebook. These don't have to be organized, but make sure you use enough comments to understand the purpose of each code cell. Then, after you're done with your analysis, create a duplicate notebook where you will trim the excess and organize your steps so that you have a flowing, cohesive report.
 
-> **Tip**: Make sure that you keep your reader informed on the steps that you are taking in your investigation. Follow every code cell, or every set of related code cells, with a markdown cell to describe to the reader what was found in the preceding cell(s). Try to make it so that the reader can then understand what they will be seeing in the following cell(s).
+Observations:
+- The column 'Fact Note' can be dropped.
+- The last 20 rows of the file contain explanations and can be dropped.
+- The columns and rows are switched (rows contain variables and the columns contain the states).
+
 
 ### Data Cleaning (gun_data.xlsx)
 
