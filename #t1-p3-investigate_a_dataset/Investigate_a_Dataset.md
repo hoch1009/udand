@@ -44,7 +44,7 @@ Getting a general overview over the data:
 df_gd.info()
 ```
 
-Observations:
+**Observations:**
 - The column 'month' has an incorrect datatype (_object_ instead of _datetime64[ns]_)
 
 ### General Properties of the file: U.S. Census Data.csv
@@ -55,7 +55,7 @@ Getting a general overview over the data:
 df_c_raw.info()
 ```
 
-Observations:
+**Observations:**
 - The column 'Fact Note' can be dropped.
 - The last 20 rows of the file contain explanations and can be dropped.
 - The columns and rows are switched (rows contain variables and the columns contain the states).
@@ -72,8 +72,64 @@ Observations:
 ### Data Cleaning (U.S. Census Data.csv)
 
 ```python
-# After discussing the structure of the data and any problems that need to be
-#   cleaned, perform those cleaning steps in the second part of this section.
+# create dataframe and skip last 20 lines
+df_c_raw = pd.read_csv('U.S. Census Data.csv', skipfooter=20, header=0, engine='python')
+
+# drop 'Fact Note' column
+df_c_raw = df_c_raw.drop('Fact Note', axis=1)
+
+# setting the index to use "Fact" as keys
+df_c_raw.set_index('Fact', inplace=True)
+
+# transpose the dataframe for easier handling
+df_c_raw = df_c_raw.transpose()
+
+# get info about the new dataframe
+df_c_raw.info()
+
+```
+
+I choose to investigate the variables 'Veterans, 2011-2015' and 'Foreign born persons, percent, 2011-2015' further.
+
+#### Variable 'Veterans, 2011-2015'
+
+```python
+# print out all values
+df_c_raw['Veterans, 2011-2015']
+```
+Observation: numbers are stored as strings and do not have a consistent format
+
+```python
+# replacing commas
+df_c_raw['Veterans, 2011-2015'] = df_c_raw['Veterans, 2011-2015'].str.replace(",", "")
+# converting to numeric type
+df_c_raw['Veterans, 2011-2015'] = pd.to_numeric(df_c_raw['Veterans, 2011-2015'], errors='coerce')
+```
+
+#### Variable 'Foreign born persons, percent, 2011-2015'
+```python
+df_c_raw['Foreign born persons, percent, 2011-2015']
+```
+Observation: percentages are stored with the sign (%) and without.
+
+```python
+# function to remove '%' and divide by 100
+def clean_percentage(x):
+    if '%' in x:
+        x = x.replace('%', '')
+        x = float(x) / 100
+        return x
+    else:
+        return float(x)
+
+# applying the function
+df_c_raw['Foreign born persons, percent, 2011-2015'] = df_c_raw['Foreign born persons, percent, 2011-2015'].apply(clean_percentage)
+
+# convert to numeric type
+df_c_raw['Foreign born persons, percent, 2011-2015'] = pd.to_numeric(df_c_raw['Foreign born persons, percent, 2011-2015'], errors='coerce')
+
+# resetting the index
+df_c_raw = df_c_raw.reset_index()        
 
 ```
 
