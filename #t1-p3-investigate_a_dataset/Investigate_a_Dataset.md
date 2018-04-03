@@ -27,7 +27,7 @@ import matplotlib.pyplot as plt
 df_gd = pd.read_excel('gun_data.xlsx')
 
 # Create a dataframe based on the raw census data
-df_c_raw = pd.read_csv('#t1-p3-investigate_a_dataset/ncis-and-census-data/U.S. Census Data.csv')
+df_c_raw = pd.read_csv('U.S. Census Data.csv')
 
 ```
 
