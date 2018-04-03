@@ -82,7 +82,7 @@ Observations:
 
 > **Tip**: Now that you've trimmed and cleaned your data, you're ready to move on to exploration. Compute statistics and create visualizations with the goal of addressing the research questions that you posed in the Introduction section. It is recommended that you be systematic with your approach. Look at one variable at a time, and then follow it up by looking at relationships between variables.
 
-### Is a high number of veterans per state associated with a high number of guns (and vice versa)?
+### Does the number of veterans per state affect the number of guns?
 
 
 ```python
@@ -91,7 +91,7 @@ Observations:
 
 ```
 
-### Is a high number of foreign born persons per state associated with a high number of guns (and vice versa)?
+### Does the number of foreign born persons per state affect the number of guns?
 
 
 ```python
