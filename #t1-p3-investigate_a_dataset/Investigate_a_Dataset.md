@@ -82,8 +82,7 @@ Observations:
 
 > **Tip**: Now that you've trimmed and cleaned your data, you're ready to move on to exploration. Compute statistics and create visualizations with the goal of addressing the research questions that you posed in the Introduction section. It is recommended that you be systematic with your approach. Look at one variable at a time, and then follow it up by looking at relationships between variables.
 
-### Does the number of veterans per state affect the number of guns?
-
+### Q1: Does the number of veterans per state affect the number of guns?
 
 ```python
 # Use this, and more code cells, to explore your data. Don't forget to add
@@ -91,8 +90,16 @@ Observations:
 
 ```
 
-### Does the number of foreign born persons per state affect the number of guns?
+### Q2: Does the number of foreign born persons per state affect the number of guns?
 
+```python
+# Continue to explore the data to address your additional research
+#   questions. Add more headers as needed if you have more questions to
+#   investigate.
+
+```
+
+### Q3: What is the overall trend of gun purchases?
 
 ```python
 # Continue to explore the data to address your additional research
