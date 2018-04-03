@@ -1,4 +1,4 @@
-# Project: Investigating data from FBI's National Instant Criminal Background Check System
+# Project: Investigating FBI Gun Data
 
 ## Table of Contents
 <ul>
@@ -11,10 +11,9 @@
 <a id='intro'></a>
 ## Introduction
 
-> **Tip**: In this section of the report, provide a brief introduction to the dataset you've selected for analysis. At the end of this section, describe the questions that you plan on exploring over the course of the report. Try to build your report around the analysis of at least one dependent variable and three independent variables. If you're not sure what questions to ask, then make sure you familiarize yourself with the dataset, its variables and the dataset context for ideas of what to explore.
-
-> If you haven't yet selected and downloaded your data, make sure you do that first before coming back here. In order to work with the data in this workspace, you also need to upload it to the workspace. To do so, click on the jupyter icon in the upper left to be taken back to the workspace directory. There should be an 'Upload' button in the upper right that will let you add your data file(s) to the workspace. You can then click on the .ipynb file name to come back here.
-
+The following analysis is based on data from the FBI's National Instant Criminal Background Check System which can be found on [GitHub](https://github.com/BuzzFeedNews/nics-firearm-background-checks/blob/master/README.md). The data set consists of two files:
+- gun_data.xlsx containing the actual gun data per state per month
+- U.S. Census Data.csv containing some variables on state level which can be used to investigate if certain aspects have an effect on the number of guns per state
 
 ```python
 # Use this cell to set up import statements for all of the packages that you
@@ -31,7 +30,7 @@
 
 > **Tip**: In this section of the report, you will load in the data, check for cleanliness, and then trim and clean your dataset for analysis. Make sure that you document your steps carefully and justify your cleaning decisions.
 
-### General Properties
+### General Properties of the file: gun_data.xlsx
 
 
 ```python
@@ -40,12 +39,28 @@
 
 ```
 
+
+### General Properties of the file: U.S. Census Data.csv
+
+
+```python
+# Load your data and print out a few lines. Perform operations to inspect data
+#   types and look for instances of missing or possibly errant data.
+
+```
 > **Tip**: You should _not_ perform too many operations in each cell. Create cells freely to explore your data. One option that you can take with this project is to do a lot of explorations in an initial notebook. These don't have to be organized, but make sure you use enough comments to understand the purpose of each code cell. Then, after you're done with your analysis, create a duplicate notebook where you will trim the excess and organize your steps so that you have a flowing, cohesive report.
 
 > **Tip**: Make sure that you keep your reader informed on the steps that you are taking in your investigation. Follow every code cell, or every set of related code cells, with a markdown cell to describe to the reader what was found in the preceding cell(s). Try to make it so that the reader can then understand what they will be seeing in the following cell(s).
 
-### Data Cleaning (Replace this with more specific notes!)
+### Data Cleaning (gun_data.xlsx)
 
+```python
+# After discussing the structure of the data and any problems that need to be
+#   cleaned, perform those cleaning steps in the second part of this section.
+
+```
+
+### Data Cleaning (U.S. Census Data.csv)
 
 ```python
 # After discussing the structure of the data and any problems that need to be
