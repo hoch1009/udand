@@ -64,9 +64,8 @@ df_c_raw.info()
 ### Data Cleaning (gun_data.xlsx)
 
 ```python
-# After discussing the structure of the data and any problems that need to be
-#   cleaned, perform those cleaning steps in the second part of this section.
-
+# change dtype of the column 'month'
+df_gd['month'] = df_gd['month'].astype('datetime64[ns]')
 ```
 
 ### Data Cleaning (U.S. Census Data.csv)
@@ -127,6 +126,7 @@ df_c_raw['Foreign born persons, percent, 2011-2015'] = df_c_raw['Foreign born pe
 
 # convert to numeric type
 df_c_raw['Foreign born persons, percent, 2011-2015'] = pd.to_numeric(df_c_raw['Foreign born persons, percent, 2011-2015'], errors='coerce')
+
 
 # resetting the index
 df_c_raw = df_c_raw.reset_index()        
