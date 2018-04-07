@@ -19,7 +19,7 @@ The following analysis is based on data from the FBI's National Instant Criminal
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-%matplotlib inline
+% matplotlib inline
 ```
 
 ```python

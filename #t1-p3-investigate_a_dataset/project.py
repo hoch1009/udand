@@ -51,9 +51,33 @@ df_t = df_c_raw[['index', 'Veterans, 2011-2015', 'Foreign born persons, percent,
 
 # add the number of permits between 2011 and 2015
 df_t = df_t.join(permits['permit'], on='index')
+df_t['permit'] = df_t['permit'].astype('int64')
 
-df_t[['Veterans, 2011-2015', 'permit']].plot(secondary_y='permit')
+'''# create a scatter plot
+df_t.plot(x='Veterans, 2011-2015', y='permit', kind='scatter')
+plt.ticklabel_format(style='plain')
+plt.show()
+
+# create a scatter plot
+df_t.plot(x='Foreign born persons, percent, 2011-2015', y='permit', kind='scatter')
+plt.ticklabel_format(style='plain')
+plt.show()'''
+
+# setting the index to 'month'
+df_gd.index = df_gd.month
+
+# group by state
+# using resample to calculate sums per year
+# turning the series into a dataframe
+df_sum = df_gd.groupby('state').resample('A')['permit'].sum().to_frame()
+
+# keeping the ticklabel_format as in the dataframe
+plt.ticklabel_format(style='plain')
+# group by month and calculate sum to see the overall development
+df_sum.groupby('month')['permit'].sum().plot()
+
 #plt.show()
 
-df_t[['Foreign born persons, percent, 2011-2015', 'permit']].plot(secondary_y='permit')
-#plt.show()
+for state, df_new in df_sum.groupby('state'):
+    df_new.plot()
+    plt.show()
