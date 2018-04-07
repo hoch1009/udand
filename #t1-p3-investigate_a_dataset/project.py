@@ -63,6 +63,7 @@ df_t.plot(x='Foreign born persons, percent, 2011-2015', y='permit', kind='scatte
 plt.ticklabel_format(style='plain')
 plt.show()'''
 
+'''
 # setting the index to 'month'
 df_gd.index = df_gd.month
 
@@ -75,9 +76,5 @@ df_sum = df_gd.groupby('state').resample('A')['permit'].sum().to_frame()
 plt.ticklabel_format(style='plain')
 # group by month and calculate sum to see the overall development
 df_sum.groupby('month')['permit'].sum().plot()
-
-#plt.show()
-
-for state, df_new in df_sum.groupby('state'):
-    df_new.plot()
-    plt.show()
+plt.show()
+'''
