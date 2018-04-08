@@ -87,7 +87,7 @@ df_gd.info()
     memory usage: 2.6+ MB
 
 
-**Observations:**
+**Observation:**
 - The column 'month' has an incorrect datatype (_object_ instead of _datetime64[ns]_)
 
 ### General Properties of the file: U.S. Census Data.csv
@@ -419,6 +419,19 @@ df_c_raw['Veterans, 2011-2015']
 
 
 
+
+```python
+# check if everything worked (sum)
+df_c_raw['Veterans, 2011-2015'].sum()
+```
+
+
+
+
+    20079700
+
+
+
 #### Variable 'Foreign born persons, percent, 2011-2015'
 
 
@@ -601,6 +614,27 @@ df_t = df_t.join(permits['permit'], on='index')
 df_t['permit'] = df_t['permit'].astype('int64')
 ```
 
+
+```python
+# get statistics for the permits
+df_t['permit'].describe().apply(lambda x: format(x, '.2f'))
+```
+
+
+
+
+    count          50.00
+    mean       678933.52
+    std       1617354.38
+    min             0.00
+    25%         39372.50
+    50%        219499.00
+    75%        621779.00
+    max      10713721.00
+    Name: permit, dtype: object
+
+
+
 <a id='eda'></a>
 ## Exploratory Data Analysis
 
@@ -609,30 +643,126 @@ df_t['permit'] = df_t['permit'].astype('int64')
 
 
 ```python
-# create a scatter plot
-df_t.plot(x='Veterans, 2011-2015', y='permit', kind='scatter')
-plt.ticklabel_format(style='plain')
-plt.show()
-```
-
-
-![png](output_38_0.png)
-
-
-<a id='q2'></a>
-### Q2: Does the number of foreign born persons per state affect the number of gun purchases?
-
-
-```python
-# create a scatter plot
-df_t.plot(x='Foreign born persons, percent, 2011-2015', y='permit', kind='scatter')
-plt.ticklabel_format(style='plain')
+# create a histogram to see distribution of number of veterans
+df_t['Veterans, 2011-2015'].hist(rwidth=0.95, figsize=(15,5))
+plt.title("distribution of Veterans (2011-2015)")
+plt.xlabel('amount')
+plt.ylabel('number of states')
+plt.xticks(np.arange(0, 2000000, step=200000))
+plt.yticks(np.arange(0, 26, step=2))
+plt.grid(False)
 plt.show()
 ```
 
 
 ![png](output_40_0.png)
 
+
+
+```python
+# get statistics for the number of veterans
+df_c_raw['Veterans, 2011-2015'].describe().apply(lambda x: format(x, '.2f'))
+```
+
+
+
+
+    count         50.00
+    mean      401594.00
+    std       383158.52
+    min        44708.00
+    25%       133271.50
+    50%       302017.50
+    75%       494949.00
+    max      1777410.00
+    Name: Veterans, 2011-2015, dtype: object
+
+
+
+**Observations:** 
+- The number of veterans was not equally distributed over the states of the U.S. 
+- There are some states (3) which each had more than 1,4 million veterans in 2011 to 2015. They made up for roughly one-fifth of all veterans in 2011-2015 (total was 20,079,700))
+- More than half of the states had less than 400,000 veterans in 2011 to 2015.
+
+
+```python
+# create a scatter plot
+df_t.plot(x='Veterans, 2011-2015', y='permit', kind='scatter', figsize=(15,5))
+plt.title("gun permits in relation to number of Veterans")
+plt.xlabel('number of veterans')
+plt.ylabel('number of gun permits')
+plt.ticklabel_format(style='plain')
+plt.show()
+```
+
+
+![png](output_43_0.png)
+
+
+**Observation:** a higher number of veterans is not associated with a higher number of gun permits.
+
+<a id='q2'></a>
+### Q2: Does the number of foreign born persons per state affect the number of gun purchases?
+
+
+```python
+# create a histogram to see distribution of number of foreign born persons
+df_t['Foreign born persons, percent, 2011-2015'].hist(rwidth=0.95, figsize=(15,5))
+plt.title("distribution of foreign born persons (2011-2015)")
+plt.xlabel('percentage')
+plt.ylabel('number of states')
+plt.yticks(np.arange(0, 15, step=2))
+plt.grid(False)
+plt.show()
+```
+
+
+![png](output_46_0.png)
+
+
+
+```python
+# get statistics for foreign born persons
+df_c_raw['Foreign born persons, percent, 2011-2015'].describe().apply(lambda x: format(x, '.3f'))
+```
+
+
+
+
+    count    50.000
+    mean      0.090
+    std       0.061
+    min       0.015
+    25%       0.044
+    50%       0.068
+    75%       0.134
+    max       0.270
+    Name: Foreign born persons, percent, 2011-2015, dtype: object
+
+
+
+**Observations:** 
+- In more than half of the states was the percentage of foreign born persons below the mean for the whole country.
+- The remaining states therefore had a relatively high percentage with some having more than twice the average.
+
+
+```python
+# create a scatter plot
+df_t.plot(x='Foreign born persons, percent, 2011-2015', y='permit', kind='scatter', figsize=(15,5))
+plt.title("gun permits in relation to percentage of foreign born persons")
+plt.xlabel('foreign born persons (percent)')
+plt.ylabel('number of gun permits')
+plt.ticklabel_format(style='plain')
+plt.show()
+```
+
+
+![png](output_49_0.png)
+
+
+**Observations:** 
+- A high percentage of foreign born persons is not associated with a higher number of gun permits.
+- There seems to be an invisible "barrier" at 2 million permits with the most states having less than 1 million permits. 
 
 <a id='q3'></a>
 ### Q3: What is the overall trend of gun purchases?
@@ -651,141 +781,40 @@ df_gd.index = df_gd.month
 # using resample to calculate sums per year
 # turning the series into a dataframe
 # source: https://stackoverflow.com/questions/32012012/pandas-resample-timeseries-with-groupby
-df_sum = df_gd.groupby('state').resample('A')['permit'].sum().to_frame()
+df_sum = df_gd.groupby('state').resample('A').sum()
+```
+
+
+```python
+# create another dataframe for overall sum and visualization
+df_sum_m = df_sum.groupby('month').sum()
 ```
 
 
 ```python
 # keeping the ticklabel_format as in the dataframe
 plt.ticklabel_format(style='plain')
+
 # group by month and calculate sum to see the overall development
-df_sum.groupby('month')['permit'].sum().plot()
+df_sum_m['permit'].plot(label='permits')
+df_sum_m['handgun'].plot(label='handgun checks', figsize=(15,5))
+#df_sum_m['multiple'].plot(secondary_y=True, figsize=(15,5))
+plt.xlabel('year')
+plt.title("development of gun permits over the years")
+plt.legend(loc='best')
 plt.show()
+
+
 ```
 
 
-![png](output_44_0.png)
+![png](output_55_0.png)
 
 
-
-```python
-df_sum.groupby('month').sum()
-```
-
-
-
-
-<div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>permit</th>
-    </tr>
-    <tr>
-      <th>month</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>1998-12-31</th>
-      <td>78169.0</td>
-    </tr>
-    <tr>
-      <th>1999-12-31</th>
-      <td>1037700.0</td>
-    </tr>
-    <tr>
-      <th>2000-12-31</th>
-      <td>1227814.0</td>
-    </tr>
-    <tr>
-      <th>2001-12-31</th>
-      <td>1408338.0</td>
-    </tr>
-    <tr>
-      <th>2002-12-31</th>
-      <td>1363211.0</td>
-    </tr>
-    <tr>
-      <th>2003-12-31</th>
-      <td>1403496.0</td>
-    </tr>
-    <tr>
-      <th>2004-12-31</th>
-      <td>1345672.0</td>
-    </tr>
-    <tr>
-      <th>2005-12-31</th>
-      <td>1350193.0</td>
-    </tr>
-    <tr>
-      <th>2006-12-31</th>
-      <td>2037453.0</td>
-    </tr>
-    <tr>
-      <th>2007-12-31</th>
-      <td>3078802.0</td>
-    </tr>
-    <tr>
-      <th>2008-12-31</th>
-      <td>3699021.0</td>
-    </tr>
-    <tr>
-      <th>2009-12-31</th>
-      <td>4450822.0</td>
-    </tr>
-    <tr>
-      <th>2010-12-31</th>
-      <td>4884307.0</td>
-    </tr>
-    <tr>
-      <th>2011-12-31</th>
-      <td>5545457.0</td>
-    </tr>
-    <tr>
-      <th>2012-12-31</th>
-      <td>5683547.0</td>
-    </tr>
-    <tr>
-      <th>2013-12-31</th>
-      <td>6169832.0</td>
-    </tr>
-    <tr>
-      <th>2014-12-31</th>
-      <td>7769858.0</td>
-    </tr>
-    <tr>
-      <th>2015-12-31</th>
-      <td>8782048.0</td>
-    </tr>
-    <tr>
-      <th>2016-12-31</th>
-      <td>11134651.0</td>
-    </tr>
-    <tr>
-      <th>2017-12-31</th>
-      <td>7469845.0</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
+**Observations:** 
+- The number of permits increased over the years beginning in 2005.
+- The numer of handgun related checks started to increase at the same time. There is a slight drop in 2014.
+- Both variables are decreasing after 2016.
 
 <a id='conclusions'></a>
 ## Conclusions
@@ -801,6 +830,11 @@ The same observations applies for the variable "foreign born persons": there see
 ### What is the overall trend of gun purchases?
 
 The overall trend of gun purchases (permits to be precise) shows a steady increase beginning in 2005. The maximum is reached in 2016 with over 11 million permits. There is a noticable drop in 2017 where the number of permits is on the same level as in 2014.
+
+### Limitations of the analysis
+
+The limitations to this analysis are to be found in the quality of the data itself. The GitHub repo states that data for California has been removed because it was inconsistent. Additionally there are Nulls to be found which cannot be accounted for. One could interpret them for example as "zero checks" or "zero permits" but they could also be missing for a number of reasons. A torough interpretation is furthermore not easy to perform because there are no explanations for the individual aspects. 
+
 
 
 ```python
