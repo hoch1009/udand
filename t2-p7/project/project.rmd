@@ -1,0 +1,341 @@
+Explanatory data anlysis on white wines
+========================================================
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, packages}
+# Load all of the packages that you end up using in your analysis in this code
+# chunk.
+
+# Notice that the parameter "echo" was set to FALSE for this code chunk. This
+# prevents the code from displaying in the knitted HTML output. You should set
+# echo=FALSE for all code chunks in your file, unless it makes sense for your
+# report to show the code that generated a particular plot.
+
+# The other parameters for "message" and "warning" should also be set to FALSE
+# for other code chunks once you have verified that each plot comes out as you
+# want it to. This will clean up the flow of your report.
+
+library(GGally)
+library(ggplot2)
+library(GGally)
+library(scales)
+library(memisc)
+library(gridExtra)
+```
+
+```{r echo=FALSE, Load_the_Data}
+# Load the Data
+df <- read.csv('wineQualityWhites.csv')
+```
+
+The dataset *wineQualityWhites.csv* contains 4898 observations for 12 variables. These are: 
+
+- fixed.acidity (tartaric acid - g / dm^3)
+- volatile.acidity (acetic acid - g / dm^3)
+- citric.acid (g / dm^3)
+- residual.sugar (g / dm^3)
+- chlorides (sodium chloride - g / dm^3
+- free.sulfur.dioxide (mg / dm^3)
+- total.sulfur.dioxide (mg / dm^3)
+- density (g / cm^3)
+- pH
+- sulphates (potassium sulphate - g / dm3)
+- alcohol (% by volume)
+- quality (score between 0 and 10)
+
+# Univariate Plots Section
+
+
+```{r echo=FALSE, basics_1}
+names(df)
+```
+
+```{r echo=FALSE, basics_2}
+dim(df)
+```
+
+```{r echo=FALSE, basics_3}
+summary(df)
+```
+
+
+```{r echo=FALSE, Univariate_Plots_2}
+
+plt1 <- ggplot(aes(x = fixed.acidity), data = df) +
+  geom_histogram()
+
+plt2 <- ggplot(aes(x = volatile.acidity), data = df) +
+  geom_histogram()
+
+plt3 <- ggplot(aes(x = citric.acid), data = df) +
+  geom_histogram()
+
+grid.arrange(plt1, plt2, plt3, ncol = 1)
+```
+
+By looking at fixed.acidity and volatile.acidity it seems like there comes a general acidity with every wine. The variability is neglible because the the basic acidity (fixed.acidity) is quite high. The same applies to citric.acid which is, when present, fairly low. 
+
+```{r echo=FALSE, Univariate_Plots_3}
+
+plt4 <- ggplot(aes(x = residual.sugar), data = df) +
+  geom_histogram()
+
+plt5 <- ggplot(aes(x = chlorides), data = df) +
+  geom_histogram()
+
+grid.arrange(plt4, plt5, ncol = 1)
+```
+
+The plot for residual.sugar combined with the explanations for this data set leeds to the conclusion that almost all wines are not sweet (a wine is sweet when ressidual.sugar is equal to or above 45).
+The detected concentration of chlorides is quite low compared to sugar.
+
+``````{r echo=FALSE, Univariate_Plots_4}
+
+plt6 <- ggplot(aes(x = free.sulfur.dioxide), data = df) +
+  geom_histogram()
+
+plt7 <- ggplot(aes(x = total.sulfur.dioxide), data = df) +
+  geom_histogram()
+
+grid.arrange(plt6, plt7, ncol = 1)
+
+```
+
+By looking at the distribution of both variables it becomes clear that the free.sulfur.dioxide has an influence on the total.sulfur.dioxide amount but bound forms of sulfur dioxide are playing an equal role.
+```{r echo=FALSE, Univariate_Plots_adding_variable }
+
+df$bound.sulfur.dioxide <- df$total.sulfur.dioxide - df$free.sulfur.dioxide
+
+```
+
+```{r echo=FALSE, Univariate_Plots_5}
+
+plt8 <- ggplot(aes(x = density), data = df) +
+  geom_histogram()
+
+plt9 <- ggplot(aes(x = pH), data = df) +
+  geom_histogram()
+
+plt10 <- ggplot(aes(x = sulphates), data = df) +
+  geom_histogram()
+
+plt11 <- ggplot(aes(x = alcohol), data = df) +
+  geom_histogram()
+
+grid.arrange(plt8, plt9, plt10, plt11, ncol = 1)
+
+```
+
+With density concentrated below 1 one has to conclude that wine is not as dense as water.
+The pH value describes how acidic a wine is. The observed values between 2.7 and 3.9 are normal (as per the provided explanation for the data set). The wines tend to be more acidic.
+The alcohol levels are relatively spread with a major peak between 8 and 10.
+
+```{r echo=FALSE, Univariate_Plots_6}
+
+ggplot(aes(x = quality), data = df) +
+  geom_histogram(binwidth = 1) +
+  geom_vline(xintercept = mean(df$quality), color='white', linetype=2)
+
+```
+
+The wines were mostly of medium (6) quality.
+
+### Structure of the dataset
+
+The data set consists of 12 variables and 4898 observations. 
+The individual data is either numerical or an integer.
+
+### Main feature of interest in the dataset
+
+Relation between the chemical properties of a wine and its quality.
+
+### Other features of interest 
+
+It will be interesting to see if the amount of alcohol in a wine has an effect on its density.
+A general assumption is that alcohol has a lower density as water.
+
+### Additional variables
+
+I created bound.sulfur.dioxide by substracting free.sulfur.dioxide from total.sulfur.dioxide
+
+
+# Bivariate Plots Section
+
+```{r echo=FALSE, Bivariate_Plots_1}
+
+ggplot(aes(x=fixed.acidity, y=quality), data = df) +
+  geom_jitter(alpha = 1/5)
+
+```
+
+Because the variable _quality_ is an integer and therefore is discreet the plot shows "bars" which allow us to assume that there is no correlation between _quality_ and _fixed.acidity_. If the bars would be offset and there would be no vertical "overlap" it would suggest that _fixed.acidity_ has an effect on the quality of wine. 
+
+```{r echo=FALSE, Bivariate_Plots_2}
+
+ggplot(aes(x=residual.sugar, y=quality), data = df) +
+  geom_jitter(alpha = 1/5)
+
+```
+
+More _residual.sugar_ does not imply a better quality of wine and vice-versa. The darker spots at each bar suggest that the majority of wines do not have much residual.sugar in them.
+
+```{r echo=FALSE, Bivariate_Plots_3}
+ggplot(aes(x=alcohol, y=quality), data = df) +
+  geom_jitter(alpha = 1/5)
+```
+
+Wines with a quality of 5 and 6 seem to have alcohol levels below. Especially wines with a rating of 5 seem to have less alcohol. Wines with a quality of 7 tend to have alcohol levels above 10 whereas the lower qualities tend to mostly have alcohol levels starting at around 9. 
+
+```{r echo=FALSE, Bivariate_Plots_4}
+ggplot(aes(x=volatile.acidity, y=quality), data = df) +
+  geom_jitter(alpha = 1/5)
+```
+
+The _volatile.acidity_ of wines seem to have an effect on the quality. The lower bar suggests that wines with a quality of around 5 have more _volatile.acidity_ than wines with a quality of 6 or even 7.
+
+```{r echo=FALSE, Bivariate_Plots_5}
+ggplot(aes(x=pH, y=quality), data = df) +
+  geom_jitter(alpha = 1/5)
+```
+
+The _ph_ factor of a wines seems to have no effect on the quality (overlapping bars, no offset).
+
+```{r echo=FALSE, Bivariate_Plots_6}
+ggplot(aes(y=alcohol, x=density), data = df) +
+  geom_jitter(alpha = 1/5)
+```
+
+The plot shows that a high amount of alcohol leeds to a lower density and vice-versa.
+
+```{r echo=FALSE, Bivariate_Plots_7}
+ggplot(aes(y=alcohol, x=residual.sugar), data = df) +
+  geom_jitter(alpha = 1/5)
+```
+
+The dark "border" suggests that a minimum amount of _residual.sugar_ is present in every wine at every alcohol level. The slope indicates that higher alcohol levels tend to have less _residual.sugar_ than their low level counterparts.
+
+```{r echo=FALSE, Bivariate_Plots_8}
+ggplot(aes(y=fixed.acidity, x=pH), data = df) +
+  geom_jitter(alpha = 1/5)
+```
+
+
+
+
+# Bivariate Analysis
+
+As per the previous plots it is challenging to point to any variable that has a fundamental effect on the quality of a wine. Unfortunately the data set lacks wines with a quality lower than 6 and more than 6. The summary() for quality shows that 50 percent of all wines are between grade 5 and 6.
+
+```{r echo=FALSE, Bivariate_Plots_add}
+
+summary(df$quality)
+
+```
+
+An interesting observation was that _residual.sugar_ stayed below 20 and therefore all wines in the data set were not sweet. 
+It was furthermore interesting to see that there is a connection between the density of a wine and its alcohol content. This confirms whats meant to be common sense.
+With alcohol being the outcome of the fermentation process it was interesting to see that remains of the sugar (which is used in the process) can be found in every wine. The process seems to not completely turn sugar into alcohol. 
+
+
+# Multivariate Plots Section
+
+> **Tip**: Now it's time to put everything together. Based on what you found in
+the bivariate plots section, create a few multivariate plots to investigate
+more complex interactions between variables. Make sure that the plots that you
+create here are justified by the plots you explored in the previous section. If
+you plan on creating any mathematical models, this is the section where you
+will do that.
+
+
+
+```{r echo=FALSE, Multivariate_Plots_}
+
+df$quality.group <- cut(df$quality, breaks = c(2,4,6,10), labels=c('low','medium','high'))
+```
+
+```{r echo=FALSE, Multivariate_Plots_1}
+
+ggpairs(df)
+
+```
+
+```{r echo=FALSE, Multivariate_Plots_2}
+ggplot(aes(x = quality, y = volatile.acidity), data = df) + 
+  geom_point(alpha = 0.3, size = 1, position = 'jitter') +
+  geom_boxplot(aes(group = quality), alpha = 0.4, color = 'purple')+
+  scale_x_continuous(breaks = c(3,4,5,6,7,8,9))+
+  stat_summary(fun.y = 'mean', geom = 'point', color = 'red')+
+  labs(x = 'Quality (score between 3 and 9)',
+       y = 'volatile acidity (g / dm^3)', 
+       title = 'quality to volatile acidity')
+```
+
+```{r echo=FALSE, Multivariate_Plots_3}
+
+```
+
+```{r echo=FALSE, Multivariate_Plots_4}
+
+```
+
+```{r echo=FALSE, Multivariate_Plots_5}
+
+```
+
+
+# Multivariate Analysis
+
+### Talk about some of the relationships you observed in this part of the \
+investigation. Were there features that strengthened each other in terms of \
+looking at your feature(s) of interest?
+
+### Were there any interesting or surprising interactions between features?
+
+### OPTIONAL: Did you create any models with your dataset? Discuss the \
+strengths and limitations of your model.
+
+------
+
+# Final Plots and Summary
+
+> **Tip**: You've done a lot of exploration and have built up an understanding
+of the structure of and relationships between the variables in your dataset.
+Here, you will select three plots from all of your previous exploration to
+present here as a summary of some of your most interesting findings. Make sure
+that you have refined your selected plots for good titling, axis labels (with
+units), and good aesthetic choices (e.g. color, transparency). After each plot,
+make sure you justify why you chose each plot by describing what it shows.
+
+### Plot One
+```{r echo=FALSE, Plot_One}
+
+```
+
+### Description One
+
+
+### Plot Two
+```{r echo=FALSE, Plot_Two}
+
+```
+
+### Description Two
+
+
+### Plot Three
+```{r echo=FALSE, Plot_Three}
+
+```
+
+### Description Three
+
+------
+
+# Reflection
+
+> **Tip**: Here's the final step! Reflect on the exploration you performed and
+the insights you found. What were some of the struggles that you went through?
+What went well? What was surprising? Make sure you include an insight into
+future work that could be done with the dataset.
+
+> **Tip**: Don't forget to remove this, and the other **Tip** sections before
+saving your final work and knitting the final report!
