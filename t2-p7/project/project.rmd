@@ -298,20 +298,54 @@ The plot shows moderate correlation (< -0.5, > +0.5) between:
 - total.sulfur.dioxide and density (+0.53)
 
 
-
+### residual.sugar vs density for different qualities of wine
 ```{r echo=FALSE, Multivariate_Plots_2}
 
+ggplot(aes(x = residual.sugar, y = density, colour = quality.group), data = df) +
+  geom_jitter(alpha = 1/4) +
+  coord_cartesian( xlim = c(0, quantile(df$residual.sugar, 0.99)),
+    ylim = c(quantile(df$density, 0.01), quantile(df$density, 0.99))) +
+  geom_smooth(method = "loess")
+
 ```
+
+By restricting the limits we generate a plot which is easier to interpret. The smoothed conditonal means allow us to conclude that wines of high quality have a low density and furthermore have less residual.sugar than wines of medium or low quality.
+
+### alcohol vs density for different qualities of wine
 
 ```{r echo=FALSE, Multivariate_Plots_3}
 
+ggplot(aes(x = alcohol, y = density, colour = quality.group), data = df) +
+  geom_jitter(alpha = 1/4) +
+  coord_cartesian(ylim = c(quantile(df$density, 0.01), quantile(df$density, 0.99))) +
+  geom_smooth(method = "loess")
+
 ```
+
+I cannot make out a difference between the three quality.groups as the smoothed conditional means are quite similar.
+
+
+### free.sulfur.dioxide and total.sulfur.dioxide for different qualities of wine
 
 ```{r echo=FALSE, Multivariate_Plots_4}
 
+ggplot(aes(x = free.sulfur.dioxide, y = total.sulfur.dioxide, colour = quality.group), data = df) +
+  geom_jitter(alpha = 1/4) +
+  coord_cartesian(xlim = c(0, quantile(df$free.sulfur.dioxide, 0.99)), ylim = c(0, quantile(df$total.sulfur.dioxide, 0.99))) +
+  geom_smooth(method = "loess")
+
 ```
 
+Wines of high quality tend to have less amounts of free.sulfur.dioxide and total.sulfur.dioxide.
+
+### total.sulfur.dioxide and density for different qualities of wine
+
 ```{r echo=FALSE, Multivariate_Plots_5}
+
+ggplot(aes(x = total.sulfur.dioxide, y = density, colour = quality.group), data = df) +
+  geom_jitter(alpha = 1/4) +
+  coord_cartesian(xlim = c(0, quantile(df$total.sulfur.dioxide, 0.99)), ylim = c(quantile(df$density, 0.01), quantile(df$density, 0.99))) +
+  geom_smooth(method = "loess")
 
 ```
 
@@ -376,5 +410,5 @@ saving your final work and knitting the final report!
 
 # References
 
-general comments on the dataset: https://s3.amazonaws.com/udacity-hosted-downloads/ud651/wineQualityInfo.txt
-filter()-funcion: https://www.datanovia.com/en/lessons/subset-data-frame-rows-in-r/
+- general comments on the dataset: https://s3.amazonaws.com/udacity-hosted-downloads/ud651/wineQualityInfo.txt
+- filter()-funcion: https://www.datanovia.com/en/lessons/subset-data-frame-rows-in-r/
