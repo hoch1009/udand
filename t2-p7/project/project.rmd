@@ -1,4 +1,4 @@
-Explanatory data anlysis on white wines
+Exploratory data anlysis on white wines
 ========================================================
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, packages}
@@ -16,16 +16,23 @@ Explanatory data anlysis on white wines
 
 library(GGally)
 library(ggplot2)
-library(GGally)
 library(scales)
 library(memisc)
 library(gridExtra)
+library(corrplot)
+library(dplyr)
+library(tidyverse)
 ```
 
 ```{r echo=FALSE, Load_the_Data}
 # Load the Data
 df <- read.csv('wineQualityWhites.csv')
 ```
+
+
+# Dataset Section
+
+## General information
 
 The dataset *wineQualityWhites.csv* contains 4898 observations for 12 variables. These are: 
 
@@ -42,21 +49,27 @@ The dataset *wineQualityWhites.csv* contains 4898 observations for 12 variables.
 - alcohol (% by volume)
 - quality (score between 0 and 10)
 
-# Univariate Plots Section
+The dataset itself is dated back to 2009.
 
-
+## Names in the dataset
 ```{r echo=FALSE, basics_1}
 names(df)
 ```
 
+## Dimension of the dataset
 ```{r echo=FALSE, basics_2}
 dim(df)
 ```
 
+## Summary of the dataset
 ```{r echo=FALSE, basics_3}
 summary(df)
 ```
 
+
+# Univariate Plots Section
+
+## fixed.acidity, volatile.acidity and citric.acid
 
 ```{r echo=FALSE, Univariate_Plots_2}
 
@@ -74,6 +87,8 @@ grid.arrange(plt1, plt2, plt3, ncol = 1)
 
 By looking at fixed.acidity and volatile.acidity it seems like there comes a general acidity with every wine. The variability is neglible because the the basic acidity (fixed.acidity) is quite high. The same applies to citric.acid which is, when present, fairly low. 
 
+## residual.sugar and chlorides
+
 ```{r echo=FALSE, Univariate_Plots_3}
 
 plt4 <- ggplot(aes(x = residual.sugar), data = df) +
@@ -88,6 +103,8 @@ grid.arrange(plt4, plt5, ncol = 1)
 The plot for residual.sugar combined with the explanations for this data set leeds to the conclusion that almost all wines are not sweet (a wine is sweet when ressidual.sugar is equal to or above 45).
 The detected concentration of chlorides is quite low compared to sugar.
 
+## free.sulfur.dioxide and total.sulfur.dioxide
+
 ``````{r echo=FALSE, Univariate_Plots_4}
 
 plt6 <- ggplot(aes(x = free.sulfur.dioxide), data = df) +
@@ -101,11 +118,14 @@ grid.arrange(plt6, plt7, ncol = 1)
 ```
 
 By looking at the distribution of both variables it becomes clear that the free.sulfur.dioxide has an influence on the total.sulfur.dioxide amount but bound forms of sulfur dioxide are playing an equal role.
+
 ```{r echo=FALSE, Univariate_Plots_adding_variable }
 
 df$bound.sulfur.dioxide <- df$total.sulfur.dioxide - df$free.sulfur.dioxide
 
 ```
+
+## density, pH, sulphates and alcohol
 
 ```{r echo=FALSE, Univariate_Plots_5}
 
@@ -128,6 +148,8 @@ grid.arrange(plt8, plt9, plt10, plt11, ncol = 1)
 With density concentrated below 1 one has to conclude that wine is not as dense as water.
 The pH value describes how acidic a wine is. The observed values between 2.7 and 3.9 are normal (as per the provided explanation for the data set). The wines tend to be more acidic.
 The alcohol levels are relatively spread with a major peak between 8 and 10.
+
+## quality
 
 ```{r echo=FALSE, Univariate_Plots_6}
 
@@ -252,21 +274,33 @@ will do that.
 df$quality.group <- cut(df$quality, breaks = c(2,4,6,10), labels=c('low','medium','high'))
 ```
 
+
+## Correlation matrix
+
+Because ggpairs produces a plot that is not useful I decided to use corrplot().
+
 ```{r echo=FALSE, Multivariate_Plots_1}
 
-ggpairs(df)
-
+cortable <- round(cor(subset(df, select=c("fixed.acidity", "volatile.acidity", "citric.acid", "residual.sugar", "chlorides", "free.sulfur.dioxide", "total.sulfur.dioxide", "density", "pH", "sulphates", "alcohol", "quality"))), 2)
+cortable
+corrplot(cortable, type = "upper", diag = FALSE)
 ```
 
+The plot shows strong correlation (< -0.7, > +0.7) between:
+
+- residual.sugar and density (+0.84)
+- density and alcohol (-0.78)
+
+
+The plot shows moderate correlation (< -0.5, > +0.5) between:
+
+- free.sulfur.dioxide and total.sulfur.dioxide (+0.62)
+- total.sulfur.dioxide and density (+0.53)
+
+
+
 ```{r echo=FALSE, Multivariate_Plots_2}
-ggplot(aes(x = quality, y = volatile.acidity), data = df) + 
-  geom_point(alpha = 0.3, size = 1, position = 'jitter') +
-  geom_boxplot(aes(group = quality), alpha = 0.4, color = 'purple')+
-  scale_x_continuous(breaks = c(3,4,5,6,7,8,9))+
-  stat_summary(fun.y = 'mean', geom = 'point', color = 'red')+
-  labs(x = 'Quality (score between 3 and 9)',
-       y = 'volatile acidity (g / dm^3)', 
-       title = 'quality to volatile acidity')
+
 ```
 
 ```{r echo=FALSE, Multivariate_Plots_3}
@@ -339,3 +373,8 @@ future work that could be done with the dataset.
 
 > **Tip**: Don't forget to remove this, and the other **Tip** sections before
 saving your final work and knitting the final report!
+
+# References
+
+general comments on the dataset: https://s3.amazonaws.com/udacity-hosted-downloads/ud651/wineQualityInfo.txt
+filter()-funcion: https://www.datanovia.com/en/lessons/subset-data-frame-rows-in-r/
