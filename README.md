@@ -12,5 +12,5 @@ Project files for Udacitys Data Analyst Nanodegree Program
 
 - Test a Perceptual Phenomenon (Python)
 - Explore and Summarize Data (R)
-- Wrangle and Analyze Data
+- Wrangle and Analyze Data (Python)
 - Create a Tableau Story
